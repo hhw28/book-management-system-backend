@@ -3,6 +3,8 @@ import {
   Body,
   Controller,
   Get,
+  Inject,
+  LoggerService,
   Post,
   Query,
   UploadedFile,
@@ -14,13 +16,15 @@ import * as path from 'path';
 import { storage } from './my-file-storage';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import * as fs from 'fs';
-import { MyLogger } from './Mylogger';
+import { MyLogger } from './winston/Mylogger';
+import { WINSTON_LOGGER_TOKEN } from './winston/winston.module';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  private readonly logger = new MyLogger();
+  @Inject(WINSTON_LOGGER_TOKEN)
+  private logger: LoggerService;
 
   @Get()
   getHello(): string {

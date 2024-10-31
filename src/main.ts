@@ -1,10 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { LoggerService, ValidationPipe } from '@nestjs/common';
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { MyLogger } from './Mylogger';
-
+import { MyLogger } from './winston/Mylogger';
+import { WINSTON_LOGGER_TOKEN } from './winston/winston.module';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
@@ -14,7 +14,7 @@ async function bootstrap() {
 
   app.enableCors();
 
-  app.useLogger(new MyLogger());
+  app.useLogger(app.get(WINSTON_LOGGER_TOKEN) as LoggerService);
 
   await app.listen(process.env.PORT ?? 3000);
 }
