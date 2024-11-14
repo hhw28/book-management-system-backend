@@ -8,9 +8,18 @@ import { UploadModule } from './upload/upload.module';
 import { WinstonModule } from './winston/winston.module';
 import { format, transports } from 'winston';
 import * as chalk from 'chalk';
+import { ConfigModule } from '@nestjs/config';
+import * as path from 'path';
+import config from '../config';
+import config2 from '../config2';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      // envFilePath: [path.join(process.cwd(), '.aaa.env'), path.join(process.cwd(), '.env')]
+      load: [config2, config]
+    }),
     UserModule,
     DbModule,
     BookModule,
